@@ -1,0 +1,82 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+    connection-timeout: 5000ms
+  port: 8080
+  servlet:
+    #    context-path: /
+    context-path: /clouddrive
+spring:
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  profiles:
+    active: dev
+  datasource:
+    username: root
+    #    username: oper_dc
+    password: 123456
+    #    password: mpH56E5bfOXB5XW*
+    #    url: jdbc:mysql://192.168.194.103:3306/clouddisk-springboot
+    url: jdbc:mysql://localhost:3306/clouddrive
+    #    url: jdbc:mysql://172.28.32.47:3306/ligao_common_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: HikariCPDatasource
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 641484973@qq.com
+    password: xgsypmurcaxubeia
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        debug: true
+  redis:
+    database: 0
+    #    host: 192.168.194.103
+    host: localhost
+    port: 6379
+    jedis:
+      pool:
+        max-active: 20
+        max-wait: -1
+        max-idle: 10
+        min-idle: 0
+    timeout: 2000
+
+mybatis-plus:
+  mapper-locations: classpath:/mappers/**/*.xml
+
+#Minio配置
+minio:
+  #  host: http://192.168.194.103:9000
+  host: http://localhost:9000
+  url: ${minio.host}/${minio.bucketName}
+  #  accessKey: chiiiplow
+  #  secretKey: chiiiplow
+  accessKey: minioadmin
+  secretKey: minioadmin
+  #  secretKey: chiiiplow
+  bucketName: clouddrive
+
+chiiiplow:
+  clouddisk:
+    jwt:
+      secret: you're_never_gonna_know
+      expire: 7
+
