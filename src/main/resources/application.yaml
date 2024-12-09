@@ -44,7 +44,7 @@ spring:
         smtp:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
-        debug: true
+        debug: false
   redis:
     database: 0
     #    host: 192.168.194.103

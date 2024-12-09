@@ -19,4 +19,12 @@ public class JwtUtils {
     private int expire;
 
 
+    public String generateTempToken() {
+        return null;
+    }
+
+    public String generateRefreshToken() {
+        return null;
+    }
+
 }

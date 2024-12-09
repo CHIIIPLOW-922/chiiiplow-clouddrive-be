@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chiiiplow.clouddrive.entity.User;
 import com.chiiiplow.clouddrive.mapper.UserMapper;
 import com.chiiiplow.clouddrive.service.IUserService;
+import org.springframework.stereotype.Service;
 
 /**
  * 用户业务实现
@@ -11,5 +12,6 @@ import com.chiiiplow.clouddrive.service.IUserService;
  * @author yangzhixiong
  * @date 2024/12/09
  */
+@Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 }
