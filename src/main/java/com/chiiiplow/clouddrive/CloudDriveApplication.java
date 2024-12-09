@@ -1,5 +1,6 @@
 package com.chiiiplow.clouddrive;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,7 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author yangzhixiong
  * @date 2024/12/05
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.chiiiplow.clouddrive")
+@MapperScan(basePackages = "com.chiiiplow.clouddrive.mapper")
 public class CloudDriveApplication {
 
     public static void main(String[] args) {

@@ -6,7 +6,6 @@ server:
     connection-timeout: 5000ms
   port: 8080
   servlet:
-    #    context-path: /
     context-path: /clouddrive
 spring:
   web:
