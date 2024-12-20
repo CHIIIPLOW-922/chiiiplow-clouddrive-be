@@ -11,4 +11,6 @@ import com.chiiiplow.clouddrive.entity.File;
  * @date 2024/12/09
  */
 public interface IFileService extends IService<File> {
+
+    String test();
 }

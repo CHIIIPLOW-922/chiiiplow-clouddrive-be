@@ -1,5 +1,11 @@
 package com.chiiiplow.clouddrive.constants;
 
+/**
+ * Redis 常量
+ *
+ * @author yangzhixiong
+ * @date 2024/12/09
+ */
 public interface RedisConstants {
 
     /**

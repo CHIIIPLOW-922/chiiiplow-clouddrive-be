@@ -6,7 +6,7 @@ package com.chiiiplow.clouddrive.exception;
  * @author yangzhixiong
  * @date 2024/12/09
  */
-public class CustomException extends RuntimeException{
+public class CustomException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
