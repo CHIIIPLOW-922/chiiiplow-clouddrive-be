@@ -13,4 +13,6 @@ public interface RedisConstants {
      */
     String EMAIL_KEY = "user:email:";
 
+    String CAPTCHA_KEY = "user:captcha:";
+
 }

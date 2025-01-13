@@ -2,6 +2,8 @@ package com.chiiiplow.clouddrive.util;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 接口返回类
  *
@@ -9,7 +11,7 @@ import lombok.Data;
  * @date 2024/06/04
  */
 @Data
-public class R<T> {
+public class R<T> implements Serializable {
 
     private int code;
 

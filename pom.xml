@@ -19,7 +19,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <skipTests>true</skipTests>
 
-        <springboot.version>2.6.1</springboot.version>
+        <springboot.version>2.7.10</springboot.version>
         <mybatis.version>1.3.2</mybatis.version>
         <logback.version>1.2.10</logback.version>
         <mysql.version>8.0.23</mysql.version>
@@ -85,14 +85,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>${springboot.version}</version>
         </dependency>
         <!--redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>${springboot.version}</version>
         </dependency>
+<!--        &lt;!&ndash;security&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
+
         <!-- JWT 相关依赖 -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

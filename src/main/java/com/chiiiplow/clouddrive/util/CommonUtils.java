@@ -133,26 +133,10 @@ public class CommonUtils {
     }
 
 
-    /**
-     * 生成 CAPTCHA 文本
-     *
-     * @param length 长度
-     * @return {@link String}
-     */
-    public static String generateCaptchaText(int length) {
-        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random = new Random();
-        StringBuilder captchaText = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            captchaText.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return captchaText.toString();
-    }
 
     /**
      * 生成 CAPTCHA 图像
      *
-     * @param captchaText CAPTCHA 文本
      * @return {@link String}
      * @throws IOException io异常
      */
@@ -226,5 +210,21 @@ public class CommonUtils {
         float saturation = 0.7f;
         float brightness = 0.9f;
         return Color.getHSBColor(hue, saturation, brightness);
+    }
+
+    /**
+     * 生成 CAPTCHA 文本
+     *
+     * @param length 长度
+     * @return {@link String}
+     */
+    public static String generateCaptchaText(int length) {
+        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder captchaText = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            captchaText.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return captchaText.toString();
     }
 }
