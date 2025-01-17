@@ -40,13 +40,13 @@ public class CommonUtils {
         if (bytes < KB) {
             return bytes + " B";
         } else if (bytes < MB) {
-            return String.format("%.0fKB", (double) bytes / KB);
+            return String.format("%.00fKB", (double) bytes / KB);
         } else if (bytes < GB) {
-            return String.format("%.0fMB", (double) bytes / MB);
+            return String.format("%.1fMB", (double) bytes / MB);
         } else if (bytes < TB) {
-            return String.format("%.0fGB", (double) bytes / GB);
+            return String.format("%.2fGB", (double) bytes / GB);
         } else {
-            return String.format("%.0fTB", (double) bytes / TB);
+            return String.format("%.1fTB", (double) bytes / TB);
         }
     }
 

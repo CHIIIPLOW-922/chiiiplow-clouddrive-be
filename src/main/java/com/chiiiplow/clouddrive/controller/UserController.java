@@ -1,13 +1,11 @@
 package com.chiiiplow.clouddrive.controller;
 
 import com.chiiiplow.clouddrive.dto.CaptchaDTO;
+import com.chiiiplow.clouddrive.dto.UserInfoDTO;
 import com.chiiiplow.clouddrive.service.IUserService;
 import com.chiiiplow.clouddrive.util.R;
 import com.chiiiplow.clouddrive.validation.Group;
-import com.chiiiplow.clouddrive.vo.CaptchaVO;
-import com.chiiiplow.clouddrive.vo.EmailVO;
-import com.chiiiplow.clouddrive.vo.LoginVO;
-import com.chiiiplow.clouddrive.vo.RegisterVO;
+import com.chiiiplow.clouddrive.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,12 +47,15 @@ public class UserController extends BaseController {
         return userService.login(loginVO, response);
     }
 
+    @PostMapping("/logout")
+    public R logout(HttpServletRequest request, HttpServletResponse response) {
+        return userService.logout(request, response);
+    }
+
 
     @PostMapping("/sendCaptcha")
     public R<CaptchaDTO> sendCaptcha(@RequestBody CaptchaVO captcha, HttpServletRequest request) throws IOException {
-//        log.info();
         return userService.sendCaptcha(captcha);
-
     }
 
 
@@ -64,7 +65,16 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/editProfile")
-    public R editProfile(@RequestBody Map<String, Object> body) {
-        return userService.editProfile(body);
+    public R editProfile(@RequestBody @Validated(Group.class) EditProfileVO editProfileVO, HttpServletRequest request, HttpServletResponse response) {
+        Long currentUserId = getCurrentUserId(request);
+        return userService.editProfile(editProfileVO, currentUserId);
     }
+
+
+    @PostMapping("/userInfo")
+    public R<UserInfoDTO> userInfo(HttpServletRequest request) {
+        Long currentUserId = getCurrentUserId(request);
+        return userService.userInfo(currentUserId);
+    }
+
 }

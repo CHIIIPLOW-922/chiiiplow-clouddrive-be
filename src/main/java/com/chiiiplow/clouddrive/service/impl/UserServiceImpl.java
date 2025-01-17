@@ -5,21 +5,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chiiiplow.clouddrive.constants.CommonConstant;
 import com.chiiiplow.clouddrive.constants.RedisConstants;
 import com.chiiiplow.clouddrive.dto.CaptchaDTO;
+import com.chiiiplow.clouddrive.dto.UserInfoDTO;
 import com.chiiiplow.clouddrive.entity.User;
 import com.chiiiplow.clouddrive.exception.CustomException;
 import com.chiiiplow.clouddrive.mapper.UserMapper;
 import com.chiiiplow.clouddrive.service.IUserService;
 import com.chiiiplow.clouddrive.util.*;
-import com.chiiiplow.clouddrive.vo.CaptchaVO;
-import com.chiiiplow.clouddrive.vo.EmailVO;
-import com.chiiiplow.clouddrive.vo.LoginVO;
-import com.chiiiplow.clouddrive.vo.RegisterVO;
+import com.chiiiplow.clouddrive.vo.*;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -148,8 +145,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public R editProfile(Map<String, Object> body) {
-        return null;
+    public R editProfile(EditProfileVO editProfileVO, Long currentUserId) {
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, currentUserId));
+        if (ObjectUtils.isEmpty(user)) {
+            throw new CustomException("该用户不存在");
+        }
+        user.setNickname(editProfileVO.getNickname());
+
+        return R.ok(null, "编辑成功");
     }
 
     @Override
@@ -176,21 +179,53 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return R.ok(null, "Token刷新成功");
     }
 
+    @Override
+    public R<UserInfoDTO> userInfo(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (ObjectUtils.isEmpty(user)) {
+            throw new CustomException("该用户不存在");
+        }
+        Long totalSpace = user.getTotalSpace();
+        Long usedSpace = user.getUsedSpace();
+        float rate = CommonUtils.calculateUsedSpaceRate(usedSpace, totalSpace);
+        String totalSpaceStr = CommonUtils.convertBytesToReadableSize(totalSpace);
+        String usedSpaceStr = CommonUtils.convertBytesToReadableSize(usedSpace);
+        UserInfoDTO userInfoDTO = new UserInfoDTO()
+                .setEmail(user.getEmail())
+                .setUsername(user.getUsername())
+                .setNickname(user.getNickname())
+                .setAvatarPath(user.getAvatarPath())
+                .setUsedSpaceRate(rate)
+                .setUsedSpace(usedSpaceStr)
+                .setTotalSpace(totalSpaceStr);
+        return R.ok(userInfoDTO, null);
+    }
+
+    @Override
+    public R logout(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Authorization", null);
+        cleanRefreshToken(response);
+        return R.ok(null, "登出成功");
+    }
+
 
     private void cleanRefreshToken(HttpServletResponse response) {
         Cookie refreshTokenCookie = new Cookie("refreshToken", null);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(0); // 设置为过期
+        refreshTokenCookie.setMaxAge(0);
         response.addCookie(refreshTokenCookie);
     }
 
     private String getRequestRefreshToken(HttpServletRequest request) {
         String refreshToken = null;
-        for (Cookie cookie : request.getCookies()) {
-            if (StringUtils.equals(cookie.getName(), "refreshToken")) {
-                refreshToken = cookie.getValue();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (StringUtils.equals(cookie.getName(), "refreshToken")) {
+                    refreshToken = cookie.getValue();
+                }
             }
         }
         return refreshToken;

@@ -37,9 +37,8 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
             log.info("无token");
-            writeResponse(response, R.fail(555, "账户验证失效"));
+            writeResponse(response, R.fail(401, null));
             return false;
-//            throw new CustomException()
         }
         String accessToken = token.substring(7);
         Claims claims = jwtUtils.validatedAccessToken(accessToken);
@@ -61,13 +60,4 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
         }
     }
 
-    private String getTokenFromCookies(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (StringUtils.equals(cookie.getName(), "refresh_token")) {
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
 }

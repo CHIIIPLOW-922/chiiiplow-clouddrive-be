@@ -35,13 +35,13 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public <T> R<T> throwCommonErrors(HttpServletResponse response,Exception e) {
+        log.info(e.getClass().getName());
         R<T> r = new R();
         String message = null;
         Integer code = null;
         r.setCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         if (e instanceof CustomException) {
-            Integer custCode = Objects.isNull(((CustomException) e).getCode()) ? null : ((CustomException) e).getCode();
-            code = custCode;
+            code = Objects.isNull(((CustomException) e).getCode()) ? null : ((CustomException) e).getCode();
             message = e.getMessage();
         } else if (e instanceof HttpMessageNotReadableException || e instanceof HttpRequestMethodNotSupportedException) {
             message = "请求参数或请求方式有错误";

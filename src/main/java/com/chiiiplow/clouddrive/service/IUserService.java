@@ -2,12 +2,10 @@ package com.chiiiplow.clouddrive.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chiiiplow.clouddrive.dto.CaptchaDTO;
+import com.chiiiplow.clouddrive.dto.UserInfoDTO;
 import com.chiiiplow.clouddrive.entity.User;
 import com.chiiiplow.clouddrive.util.R;
-import com.chiiiplow.clouddrive.vo.CaptchaVO;
-import com.chiiiplow.clouddrive.vo.EmailVO;
-import com.chiiiplow.clouddrive.vo.LoginVO;
-import com.chiiiplow.clouddrive.vo.RegisterVO;
+import com.chiiiplow.clouddrive.vo.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,10 +58,10 @@ public interface IUserService extends IService<User> {
     /**
      * 编辑个人资料
      *
-     * @param body 身体
+     * @param editProfileVO 编辑个人资料 VO
      * @return {@link R}
      */
-    R editProfile(Map<String, Object> body);
+    R editProfile(EditProfileVO editProfileVO, Long currentUserId);
 
     /**
      * 刷新AccessToken
@@ -73,4 +71,19 @@ public interface IUserService extends IService<User> {
      * @param response
      */
     R refresh(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 用户信息
+     *
+     * @param userId 用户 ID
+     * @return {@link R}<{@link UserInfoDTO}>
+     */
+    R<UserInfoDTO> userInfo(Long userId);
+
+    /**
+     * 注销
+     *
+     * @return {@link R}
+     */
+    R logout(HttpServletRequest request, HttpServletResponse response);
 }

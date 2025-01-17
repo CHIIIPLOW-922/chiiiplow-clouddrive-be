@@ -78,7 +78,7 @@ chiiiplow:
     jwt:
       access:
         secret: you're_never_gonna_know
-        expire: 15
+        expire: 60
       refresh:
         secret: you'll_still_never_know
         expire: 10080
