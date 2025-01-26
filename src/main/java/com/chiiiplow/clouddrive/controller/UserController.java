@@ -36,11 +36,6 @@ public class UserController extends BaseController {
         return userService.register(registerVO);
     }
 
-    @PostMapping("/refresh")
-    public R refresh(HttpServletRequest request, HttpServletResponse response) {
-        return userService.refresh(request, response);
-    }
-
 
     @PostMapping("/login")
     public R login(@RequestBody @Validated(Group.class) LoginVO loginVO, HttpServletRequest request, HttpServletResponse response) {
@@ -66,14 +61,14 @@ public class UserController extends BaseController {
 
     @PostMapping("/editProfile")
     public R editProfile(@RequestBody @Validated(Group.class) EditProfileVO editProfileVO, HttpServletRequest request, HttpServletResponse response) {
-        Long currentUserId = getCurrentUserId(request);
+        Long currentUserId = getCurrentUserId(request, response);
         return userService.editProfile(editProfileVO, currentUserId);
     }
 
 
     @PostMapping("/userInfo")
-    public R<UserInfoDTO> userInfo(HttpServletRequest request) {
-        Long currentUserId = getCurrentUserId(request);
+    public R<UserInfoDTO> userInfo(HttpServletRequest request, HttpServletResponse response) {
+        Long currentUserId = getCurrentUserId(request, response);
         return userService.userInfo(currentUserId);
     }
 

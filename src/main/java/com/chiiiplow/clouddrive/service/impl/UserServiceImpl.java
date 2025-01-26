@@ -139,7 +139,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         String verifyCode = String.format("%06d", (int) (Math.random() * 1000000));
         redisUtils.setex(RedisConstants.EMAIL_KEY + email, verifyCode, CommonConstant.ONE_MINUTE * 10);
-        emailUtils.sendEmail(email, "[CloudDisk网盘系统]短信验证", buildEmailContent(verifyCode));
+        emailUtils.sendEmail(email, "[CloudDisk网盘系统]短信验证", emailUtils.buildEmailContent(verifyCode));
 
         return R.ok(null, "发送成功");
     }
@@ -155,29 +155,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return R.ok(null, "编辑成功");
     }
 
-    @Override
-    public R refresh(HttpServletRequest request, HttpServletResponse response) {
-        String requestRefreshToken = getRequestRefreshToken(request);
-        if (StringUtils.isEmpty(requestRefreshToken)) {
-            cleanRefreshToken(response);
-            throw new CustomException(555, "刷新Token为空");
-        }
-        Claims claims = jwtUtils.validateRefreshToken(requestRefreshToken);
-        if (Objects.isNull(claims)) {
-            cleanRefreshToken(response);
-            throw new CustomException(555, "刷新Token失效");
-        }
-        Long userId = (Long) claims.get("userId");
-        String username = (String) claims.get("username");
-        if (!userMapper.exists(new LambdaQueryWrapper<User>().eq(User::getUsername, username).eq(User::getId, userId))) {
-            cleanRefreshToken(response);
-            throw new CustomException(555, "Token校验用户不存在");
-        }
-        User user = new User().setId(userId).setUsername(username);
-        String accessToken = jwtUtils.generateAccessToken(user);
-        response.addHeader("Authorization", accessToken);
-        return R.ok(null, "Token刷新成功");
-    }
 
     @Override
     public R<UserInfoDTO> userInfo(Long userId) {
@@ -204,40 +181,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public R logout(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Authorization", null);
-        cleanRefreshToken(response);
+        jwtUtils.cleanRefreshToken(response);
         return R.ok(null, "登出成功");
     }
 
 
-    private void cleanRefreshToken(HttpServletResponse response) {
-        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(0);
-        response.addCookie(refreshTokenCookie);
-    }
 
-    private String getRequestRefreshToken(HttpServletRequest request) {
-        String refreshToken = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (StringUtils.equals(cookie.getName(), "refreshToken")) {
-                    refreshToken = cookie.getValue();
-                }
-            }
-        }
-        return refreshToken;
-    }
 
-    private String buildEmailContent(String verifyCode) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[CloudDisk网盘系统] 亲爱的用户，您的邮箱验证码为: ")
-                .append(verifyCode)
-                .append("。请在10分钟内，输入此验证码进行验证。如果您没有请求该系统邮箱验证码，请忽略此邮件，谢谢！[CHIIIPLOW]");
-        return builder.toString();
-    }
 
 
 }

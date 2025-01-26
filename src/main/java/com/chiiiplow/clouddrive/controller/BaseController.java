@@ -1,14 +1,17 @@
 package com.chiiiplow.clouddrive.controller;
 
 
+import com.chiiiplow.clouddrive.enums.HttpCode;
 import com.chiiiplow.clouddrive.exception.CustomException;
 import com.chiiiplow.clouddrive.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 基础控制层
@@ -29,9 +32,13 @@ public class BaseController {
      * @param request 请求
      * @return {@link Long}
      */
-    protected Long getCurrentUserId(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        String accessToken = authorization.substring(7);
+    protected Long getCurrentUserId(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken;
+        String authorization  = request.getHeader("Authorization");
+        accessToken = StringUtils.isEmpty(authorization) ? response.getHeader("Authorization") : authorization.substring(7);
+        if (accessToken == null) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), HttpCode.UNAUTHORIZED.getMessage());
+        }
         Claims claims = jwtUtils.validatedAccessToken(accessToken);
         if (ObjectUtils.isEmpty(claims)) {
             throw new CustomException("获取UserId失败");

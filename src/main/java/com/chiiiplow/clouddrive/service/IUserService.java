@@ -63,14 +63,6 @@ public interface IUserService extends IService<User> {
      */
     R editProfile(EditProfileVO editProfileVO, Long currentUserId);
 
-    /**
-     * 刷新AccessToken
-     *
-     * @return {@link R}
-     * @param request
-     * @param response
-     */
-    R refresh(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * 用户信息

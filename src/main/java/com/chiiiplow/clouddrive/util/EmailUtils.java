@@ -44,4 +44,13 @@ public class EmailUtils {
             throw new CustomException("邮件发送失败");
         }
     }
+
+
+    public String buildEmailContent(String verifyCode) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[CloudDisk网盘系统] 亲爱的用户，您的邮箱验证码为: ")
+                .append(verifyCode)
+                .append("。请在10分钟内，输入此验证码进行验证。如果您没有请求该系统邮箱验证码，请忽略此邮件，谢谢！[CHIIIPLOW]");
+        return builder.toString();
+    }
 }

@@ -1,5 +1,6 @@
 package com.chiiiplow.clouddrive.util;
 
+import com.chiiiplow.clouddrive.enums.HttpCode;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -42,9 +43,9 @@ public class R<T> implements Serializable {
         return restResult(data, code, msg);
     }
 
-//    public static <T> R<T> http(HttpCodeEnum httpCodeEnum, T data) {
-//        return restResult(data, httpCodeEnum.getCode(), httpCodeEnum.getMsg());
-//    }
+    public static <T> R<T> http(HttpCode httpCodeEnum, T data) {
+        return restResult(data, httpCodeEnum.getCode(), httpCodeEnum.getMessage());
+    }
 
     public static <T> R<T> fail() {
         return restResult(null, FAIL, FAIL_MSG);

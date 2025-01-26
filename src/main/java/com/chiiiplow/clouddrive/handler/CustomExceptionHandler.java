@@ -35,7 +35,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public <T> R<T> throwCommonErrors(HttpServletResponse response,Exception e) {
-        log.info(e.getClass().getName());
+        log.info("错误：{}{}", e.getStackTrace(), e.getMessage());
         R<T> r = new R();
         String message = null;
         Integer code = null;
