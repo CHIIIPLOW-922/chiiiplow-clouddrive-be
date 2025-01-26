@@ -61,11 +61,6 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
         }
         Long userId = (Long) refreshTokenClaims.get("userId");
         String username = (String) refreshTokenClaims.get("username");
-        if (!userMapper.exists(new LambdaQueryWrapper<User>().eq(User::getId, userId).eq(User::getUsername, username))) {
-            jwtUtils.cleanRefreshToken(response);
-            writeResponse(response, R.http(HttpCode.UNAUTHORIZED, null));
-            return false;
-        }
         User user = new User().setId(userId).setUsername(username);
         String refreshAccessToken = jwtUtils.generateAccessToken(user);
         response.setHeader("Authorization", refreshAccessToken);
