@@ -1,11 +1,13 @@
 package com.chiiiplow.clouddrive.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,6 +21,26 @@ public class RedisUtils<V> {
 
     @Resource
     private RedisTemplate<String, V> redisTemplate;
+
+    public boolean allowRequestWithLua(String key, int limit, int windowSeconds) {
+        String luaScript =
+                "local current = redis.call('INCR', KEYS[1])\n" +
+                        "if current == 1 then\n" +
+                        "    redis.call('EXPIRE', KEYS[1], ARGV[1])\n" +
+                        "end\n" +
+                        "return current <= tonumber(ARGV[2])";
+
+        RedisScript<Boolean> script = RedisScript.of(luaScript, Boolean.class);
+        return Boolean.TRUE.equals(
+                redisTemplate.execute(
+                        script,
+                        Collections.singletonList(key),
+                        String.valueOf(windowSeconds),
+                        String.valueOf(limit)
+                )
+        );
+    }
+
 
     public void delete(String... key) {
         if (key != null && key.length > 0) {

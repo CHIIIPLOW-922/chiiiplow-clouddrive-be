@@ -35,8 +35,6 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Resource
-    private UserMapper userMapper;
 
 
     @Override

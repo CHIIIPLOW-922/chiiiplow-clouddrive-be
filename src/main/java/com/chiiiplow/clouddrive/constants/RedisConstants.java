@@ -15,4 +15,6 @@ public interface RedisConstants {
 
     String CAPTCHA_KEY = "user:captcha:";
 
+    String IP_KEY = "clouddrive:ip:";
+
 }

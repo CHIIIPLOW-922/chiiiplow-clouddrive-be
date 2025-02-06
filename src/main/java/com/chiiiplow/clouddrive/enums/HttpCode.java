@@ -38,6 +38,7 @@ public enum HttpCode {
     SHARE_LINK_EXPIRED(410, "分享链接已过期"),
     DOWNLOAD_FAILED(500, "文件下载失败"),
     OPERATION_NOT_SUPPORTED(405, "操作不被支持"),
+    LIMIT_REQUESTED(406, "过多请求"),
     INVALID_CAPTCHA(400, "验证码错误");
 
     private final int code;

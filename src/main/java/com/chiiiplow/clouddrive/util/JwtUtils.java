@@ -2,10 +2,12 @@ package com.chiiiplow.clouddrive.util;
 
 import com.chiiiplow.clouddrive.constants.CommonConstant;
 import com.chiiiplow.clouddrive.entity.User;
+import com.chiiiplow.clouddrive.enums.HttpCode;
 import com.chiiiplow.clouddrive.exception.CustomException;
 import com.chiiiplow.clouddrive.vo.LoginVO;
 import com.mysql.cj.exceptions.DataReadException;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,7 @@ import java.util.UUID;
  * @date 2024/12/09
  */
 @Component
+@Slf4j
 public class JwtUtils {
 
     @Value(value = "${chiiiplow.clouddisk.jwt.access.secret}")
@@ -37,7 +40,6 @@ public class JwtUtils {
 
     @Value(value = "${chiiiplow.clouddisk.jwt.refresh.expire}")
     private int REFRESH_EXPIRE;
-
 
 
     /**
@@ -68,7 +70,7 @@ public class JwtUtils {
      * @param user 用户
      * @return {@link String}
      */
-    public String generateRefreshToken(User user){
+    public String generateRefreshToken(User user) {
         long now = System.currentTimeMillis();
         String jwtId = UUID.randomUUID().toString();
         Map<String, Object> resultMap = new HashMap<>();
@@ -94,8 +96,16 @@ public class JwtUtils {
     public Claims validatedAccessToken(String token) {
         try {
             return Jwts.parser().setSigningKey(ACCESS_SECRET).parseClaimsJws(token).getBody();
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
             return null;
+        } catch (SignatureException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
+        } catch (MalformedJwtException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
+        } catch (UnsupportedJwtException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
         }
 
     }
@@ -109,8 +119,16 @@ public class JwtUtils {
     public Claims validateRefreshToken(String token) {
         try {
             return Jwts.parser().setSigningKey(REFRESH_SECRET).parseClaimsJws(token).getBody();
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
             return null;
+        } catch (SignatureException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
+        } catch (MalformedJwtException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
+        } catch (UnsupportedJwtException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), "伪造Token!!!!");
         }
     }
 

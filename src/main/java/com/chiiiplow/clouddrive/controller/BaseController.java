@@ -34,9 +34,9 @@ public class BaseController {
      */
     protected Long getCurrentUserId(HttpServletRequest request, HttpServletResponse response) {
         String accessToken;
-        String authorization  = request.getHeader("Authorization");
-        accessToken = StringUtils.isEmpty(authorization) ? response.getHeader("Authorization") : authorization.substring(7);
-        if (accessToken == null) {
+        String authorization  = response.getHeader("Authorization");
+        accessToken = StringUtils.isEmpty(authorization) ? request.getHeader("Authorization").substring(7) : authorization;
+        if (StringUtils.isEmpty(accessToken)) {
             throw new CustomException(HttpCode.UNAUTHORIZED.getCode(), HttpCode.UNAUTHORIZED.getMessage());
         }
         Claims claims = jwtUtils.validatedAccessToken(accessToken);
