@@ -1,15 +1,11 @@
 package com.chiiiplow.clouddrive.config;
 
-import com.chiiiplow.clouddrive.handler.AccessTokenInterceptor;
-import com.chiiiplow.clouddrive.handler.RequestLimitInterceptor;
+import com.chiiiplow.clouddrive.interceptor.AccessTokenInterceptor;
+import com.chiiiplow.clouddrive.interceptor.RequestLimitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Web 配置

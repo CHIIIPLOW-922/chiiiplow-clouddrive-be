@@ -1,7 +1,5 @@
 package com.chiiiplow.clouddrive;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chiiiplow.clouddrive.entity.User;
 import com.chiiiplow.clouddrive.mapper.UserMapper;
 import com.chiiiplow.clouddrive.service.IFileService;
@@ -50,19 +48,5 @@ public class CloudDriveApplicationTests {
         Object o = redisUtils.get("user:email:q641484973@gmail.com");
         System.out.println(o);
 
-    }
-
-    @Test
-    void test() {
-        System.out.println(111);
-    }
-
-    public static void main(String[] args) {
-        String s = "abcba";
-        char[] chars = s.toCharArray();
-        int r = 0, l = chars.length - 1;
-        for (int i = l; i > 0; i--) {
-
-        }
     }
 }

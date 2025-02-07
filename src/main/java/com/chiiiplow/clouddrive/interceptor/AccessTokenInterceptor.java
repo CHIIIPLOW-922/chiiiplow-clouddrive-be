@@ -1,4 +1,4 @@
-package com.chiiiplow.clouddrive.handler;
+package com.chiiiplow.clouddrive.interceptor;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.chiiiplow.clouddrive.entity.User;
@@ -39,7 +39,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("拦截成功"+request.getRequestURI());
+//        log.info("拦截成功"+request.getRequestURI());
         String accessToken = getAccessToken(request);
         Claims claims = jwtUtils.validatedAccessToken(accessToken);
         if (!Objects.isNull(claims)) {
