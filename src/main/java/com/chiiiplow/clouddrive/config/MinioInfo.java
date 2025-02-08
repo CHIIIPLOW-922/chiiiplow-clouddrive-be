@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "minio")
 @Data
 @Configuration
-public class MinioProperties {
+public class MinioInfo {
     private String accessKey;
     private String secretKey;
     private String bucketName;
