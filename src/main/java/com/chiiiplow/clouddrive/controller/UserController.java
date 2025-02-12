@@ -61,14 +61,14 @@ public class UserController extends BaseController {
 
     @PostMapping("/editProfile")
     public R editProfile(@RequestBody @Validated(Group.class) EditProfileVO editProfileVO, HttpServletRequest request, HttpServletResponse response) {
-        Long currentUserId = getCurrentUserId(request, response);
+        String currentUserId = getCurrentUserId(request, response);
         return userService.editProfile(editProfileVO, currentUserId);
     }
 
 
     @PostMapping("/userInfo")
     public R<UserInfoDTO> userInfo(HttpServletRequest request, HttpServletResponse response) {
-        Long currentUserId = getCurrentUserId(request, response);
+        String currentUserId = getCurrentUserId(request, response);
         return userService.userInfo(currentUserId);
     }
 

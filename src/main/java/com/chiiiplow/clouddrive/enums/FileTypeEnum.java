@@ -75,4 +75,13 @@ public enum FileTypeEnum {
     public String getCategory() {
         return category;
     }
+
+    public static FileTypeEnum fromFileTypeEnum(String mimeType) {
+        for (FileTypeEnum typeEnum : FileTypeEnum.values()) {
+            if (typeEnum.getMimeType().equalsIgnoreCase(mimeType)) {
+                return typeEnum;
+            }
+        }
+        return null;
+    }
 }

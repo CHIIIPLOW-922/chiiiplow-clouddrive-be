@@ -10,7 +10,6 @@ import com.chiiiplow.clouddrive.vo.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 用户业务接口
@@ -59,9 +58,10 @@ public interface IUserService extends IService<User> {
      * 编辑个人资料
      *
      * @param editProfileVO 编辑个人资料 VO
+     * @param currentUserId
      * @return {@link R}
      */
-    R editProfile(EditProfileVO editProfileVO, Long currentUserId);
+    R editProfile(EditProfileVO editProfileVO, String currentUserId);
 
 
     /**
@@ -70,7 +70,7 @@ public interface IUserService extends IService<User> {
      * @param userId 用户 ID
      * @return {@link R}<{@link UserInfoDTO}>
      */
-    R<UserInfoDTO> userInfo(Long userId);
+    R<UserInfoDTO> userInfo(String userId);
 
     /**
      * 注销

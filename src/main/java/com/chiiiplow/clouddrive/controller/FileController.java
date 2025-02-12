@@ -1,12 +1,14 @@
 package com.chiiiplow.clouddrive.controller;
 
-import com.chiiiplow.clouddrive.entity.File;
+import com.chiiiplow.clouddrive.dto.FileDTO;
+import com.chiiiplow.clouddrive.dto.PageDTO;
 import com.chiiiplow.clouddrive.service.IFileService;
 import com.chiiiplow.clouddrive.util.R;
+import com.chiiiplow.clouddrive.vo.BreadcrumbVO;
 import com.chiiiplow.clouddrive.vo.FileVO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.chiiiplow.clouddrive.vo.FolderVO;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +28,31 @@ public class FileController extends BaseController {
     private IFileService fileService;
 
 
-    @PostMapping("files/list")
-    public R<List<File>> list(@RequestBody FileVO fileVO, HttpServletResponse response, HttpServletRequest request) {
-        Long currentUserId = getCurrentUserId(request, response);
-        return fileService.listByFileType(fileVO, currentUserId, response, request);
+    @PostMapping("file/pages")
+    public R<PageDTO<FileDTO>> pages(@RequestBody FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
+        String currentUserId = getCurrentUserId(request, response);
+        return fileService.pagesByPageQuery(fileVO, currentUserId);
+    }
+
+    @PostMapping("file/breadcrumb")
+    public R<List<FileDTO>> breadcrumb(@RequestBody FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
+        String currentUserId = getCurrentUserId(request, response);
+        return fileService.breadcrumb(fileVO, currentUserId);
     }
 
 
-    @PostMapping("files/initUpload")
+    @PostMapping("file/initUpload")
     public R initUpload(HttpServletRequest request, HttpServletResponse response) {
-        Long currentUserId = getCurrentUserId(request, response);
+        String currentUserId = getCurrentUserId(request, response);
         return null;
     }
+
+    @PostMapping("file/addFolder")
+    public R addFolder(@RequestBody @Validated FolderVO folderVO, HttpServletRequest request, HttpServletResponse response) {
+        String currentUserId = getCurrentUserId(request, response);
+        return fileService.addFolder(folderVO, currentUserId);
+    }
+
 
 
 }

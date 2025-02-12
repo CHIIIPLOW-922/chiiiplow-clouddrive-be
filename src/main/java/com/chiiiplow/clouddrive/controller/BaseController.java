@@ -32,7 +32,7 @@ public class BaseController {
      * @param request 请求
      * @return {@link Long}
      */
-    protected Long getCurrentUserId(HttpServletRequest request, HttpServletResponse response) {
+    protected String getCurrentUserId(HttpServletRequest request, HttpServletResponse response) {
         String accessToken;
         String authorization  = response.getHeader("Authorization");
         accessToken = StringUtils.isEmpty(authorization) ? request.getHeader("Authorization").substring(7) : authorization;
@@ -44,6 +44,7 @@ public class BaseController {
             throw new CustomException("获取UserId失败");
         }
         Long userId = (Long) claims.get("userId");
-        return userId;
+        String strUserId = userId.toString();
+        return strUserId;
     }
 }

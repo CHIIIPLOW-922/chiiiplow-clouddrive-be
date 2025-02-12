@@ -1,18 +1,32 @@
 package com.chiiiplow.clouddrive.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chiiiplow.clouddrive.component.CustomMinioAsyncClient;
+import com.chiiiplow.clouddrive.dto.FileDTO;
+import com.chiiiplow.clouddrive.dto.PageDTO;
 import com.chiiiplow.clouddrive.entity.File;
+import com.chiiiplow.clouddrive.enums.FileCategoryEnum;
 import com.chiiiplow.clouddrive.exception.CustomException;
 import com.chiiiplow.clouddrive.mapper.FileMapper;
 import com.chiiiplow.clouddrive.service.IFileService;
+import com.chiiiplow.clouddrive.util.BeanCopyUtils;
 import com.chiiiplow.clouddrive.util.R;
+import com.chiiiplow.clouddrive.vo.BreadcrumbVO;
 import com.chiiiplow.clouddrive.vo.FileVO;
+import com.chiiiplow.clouddrive.vo.FolderVO;
 import io.minio.MinioClient;
 import io.minio.StatObjectArgs;
 import io.minio.errors.*;
+import lombok.extern.slf4j.Slf4j;
+import lombok.var;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +34,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * 文件业务实现
@@ -29,10 +47,12 @@ import java.util.List;
  * @date 2024/12/09
  */
 @Service
+@Slf4j
 public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IFileService {
 
     @Resource
     private FileMapper fileMapper;
+
 
     @Resource
     private CustomMinioAsyncClient customMinioAsyncClient;
@@ -43,13 +63,22 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
 
 
-    @Override
-    public R<List<File>> listByFileType(FileVO fileVO, Long currentUserId, HttpServletResponse response, HttpServletRequest request) {
-
-        String fileType = fileVO.getFileTypeName();
-        List<File> files = fileMapper.selectList(new LambdaQueryWrapper<File>().eq(File::getUserId, currentUserId));
-        return R.ok(files, "获取当前用户文件信息成功");
-    }
+//    @Override
+//    public R<IPage<FileDTO>> list(FileVO fileVO, Long currentUserId) {
+//        LambdaQueryWrapper<File> fileLambdaQueryWrapper = new LambdaQueryWrapper<>();
+//
+//        long parentId = fileVO.getParentId() != null ? fileVO.getParentId() : 0L;
+//        String fileTypeName = fileVO.getFileTypeName();
+//        FileCategoryEnum fileCategoryEnum = FileCategoryEnum.fromCategory(fileTypeName);
+//
+//        if (!ObjectUtils.isEmpty(fileCategoryEnum)) {
+//            fileLambdaQueryWrapper.eq(File::getFileType, fileCategoryEnum.getFileType());
+//        }
+//        fileLambdaQueryWrapper.eq(File::getUserId, currentUserId).eq(File::getParentId, parentId);
+////        List<File> files = fileMapper.selectList(fileLambdaQueryWrapper);
+//        IPage<File> fileIPage = fileMapper.selectPage(new Page<File>().setPages(fileVO.getPages()), fileLambdaQueryWrapper);
+//        return R.ok(, null);
+//    }
 
     @Override
     public R initUpload() {
@@ -63,4 +92,73 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         }
         return null;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public R addFolder(FolderVO folderVO, String userId) {
+        String parentId = folderVO.getParentId() != null ? folderVO.getParentId() : "0";
+        String folderName = folderVO.getFolderName();
+        if (fileMapper.exists(new LambdaQueryWrapper<File>()
+                .eq(File::getParentId, parentId)
+                .eq(File::getUserId, userId)
+                .eq(File::getFileName, folderName)
+                .eq(File::getIsFolder, 1))) {
+
+            throw new CustomException("当前路径下已存在同名文件夹");
+        }
+        File file = new File().setFileName(folderName).setParentId(parentId).setUserId(userId).setIsFolder(1);
+        try {
+            fileMapper.insert(file);
+        } catch (Exception e) {
+            log.info("添加文件夹错误:{}", e.getMessage());
+            throw new CustomException("添加文件夹错误");
+        }
+        return R.ok(null,"新增文件夹成功!");
+    }
+
+    @Override
+    public R<PageDTO<FileDTO>> pagesByPageQuery(FileVO fileVO, String currentUserId) {
+        Page<File> page = new Page<>();
+        page.setSize(fileVO.getPageSize()).setCurrent(fileVO.getPageNo());
+        LambdaQueryWrapper<File> fileLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        String parentId = fileVO.getParentId() != null ? fileVO.getParentId() : "0";
+        String fileTypeName = fileVO.getFileTypeName();
+        FileCategoryEnum fileCategoryEnum = FileCategoryEnum.fromCategory(fileTypeName);
+
+        if (!ObjectUtils.isEmpty(fileCategoryEnum)) {
+            fileLambdaQueryWrapper.eq(File::getFileType, fileCategoryEnum.getFileType());
+        }
+        fileLambdaQueryWrapper.eq(File::getUserId, currentUserId).eq(File::getParentId, parentId);
+        Page<File> filePage = fileMapper.selectPage(page, fileLambdaQueryWrapper);
+        PageDTO<FileDTO> pageDTO = PageDTO.of(filePage, FileDTO.class);
+        return R.ok(pageDTO, null);
+    }
+
+
+
+    @Override
+    public R<List<FileDTO>> breadcrumb(FileVO fileVO, String currentUserId) {
+        List<FileDTO> breadcrumb = new ArrayList<>();
+        String parentId = fileVO.getParentId();
+        if (StringUtils.isBlank(parentId)) {
+            return R.ok(breadcrumb, null);
+        }
+        List<File> files = fileMapper.selectList(new LambdaQueryWrapper<File>().eq(File::getUserId, currentUserId));
+        List<FileDTO> fileDTOS = BeanCopyUtils.copyBeanList(files, FileDTO.class);
+        treeBreadcrumb(fileDTOS, breadcrumb, parentId);
+        Collections.reverse(breadcrumb);
+        return R.ok(breadcrumb, null);
+    }
+
+    private void treeBreadcrumb(List<FileDTO> files, List<FileDTO> breadcrumb, String currentId) {
+        if (breadcrumb.size() == 4 || StringUtils.equals(currentId, "0")) {
+            return;
+        }
+        FileDTO currentFile = files.stream().filter(file -> StringUtils.equals(file.getId(), currentId)).findFirst().orElseThrow(()->new CustomException("找不到文件"));
+        breadcrumb.add(currentFile);
+        treeBreadcrumb(files, breadcrumb, currentFile.getParentId());
+    }
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.chiiiplow.clouddrive;
 
 import com.chiiiplow.clouddrive.entity.User;
+import com.chiiiplow.clouddrive.enums.FileCategoryEnum;
 import com.chiiiplow.clouddrive.mapper.UserMapper;
 import com.chiiiplow.clouddrive.service.IFileService;
 import com.chiiiplow.clouddrive.util.EmailUtils;
@@ -48,5 +49,10 @@ public class CloudDriveApplicationTests {
         Object o = redisUtils.get("user:email:q641484973@gmail.com");
         System.out.println(o);
 
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(FileCategoryEnum.fromCategory("Audio").getFileType());
     }
 }

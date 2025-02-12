@@ -1,7 +1,11 @@
 package com.chiiiplow.clouddrive.vo;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chiiiplow.clouddrive.entity.File;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import query.PageQuery;
 
 import javax.validation.constraints.NotNull;
 
@@ -12,10 +16,13 @@ import javax.validation.constraints.NotNull;
  * @date 2025/02/07
  */
 @Data
-public class FileVO {
+@EqualsAndHashCode(callSuper = true)
+public class FileVO extends PageQuery {
 
 
-    private String mimeTypeName;
+//    private String mimeTypeName;
 
     private String fileTypeName;
+
+    private String parentId;
 }

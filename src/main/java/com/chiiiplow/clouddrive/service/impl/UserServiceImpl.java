@@ -12,7 +12,6 @@ import com.chiiiplow.clouddrive.mapper.UserMapper;
 import com.chiiiplow.clouddrive.service.IUserService;
 import com.chiiiplow.clouddrive.util.*;
 import com.chiiiplow.clouddrive.vo.*;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -26,8 +25,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -145,7 +142,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public R editProfile(EditProfileVO editProfileVO, Long currentUserId) {
+    public R editProfile(EditProfileVO editProfileVO, String currentUserId) {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, currentUserId));
         if (ObjectUtils.isEmpty(user)) {
             throw new CustomException("该用户不存在");
@@ -157,7 +154,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
     @Override
-    public R<UserInfoDTO> userInfo(Long userId) {
+    public R<UserInfoDTO> userInfo(String userId) {
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new CustomException("该用户不存在");
