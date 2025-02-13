@@ -5,12 +5,9 @@ import com.chiiiplow.clouddrive.dto.FileDTO;
 import com.chiiiplow.clouddrive.dto.PageDTO;
 import com.chiiiplow.clouddrive.entity.File;
 import com.chiiiplow.clouddrive.util.R;
-import com.chiiiplow.clouddrive.vo.BreadcrumbVO;
 import com.chiiiplow.clouddrive.vo.FileVO;
 import com.chiiiplow.clouddrive.vo.FolderVO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -66,4 +63,13 @@ public interface IFileService extends IService<File> {
      * @return {@link R}<{@link List}<{@link FileDTO}>>
      */
     R<List<FileDTO>> breadcrumb(FileVO fileVO, String currentUserId);
+
+    /**
+     * 搜索
+     *
+     * @param fileVO        文件 vo
+     * @param currentUserId 当前用户 ID
+     * @return {@link R}<{@link PageDTO}<{@link FileDTO}>>
+     */
+    R<List<FileDTO>> search(FileVO fileVO, String currentUserId);
 }

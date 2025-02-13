@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import query.PageQuery;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -25,4 +26,7 @@ public class FileVO extends PageQuery {
     private String fileTypeName;
 
     private String parentId;
+
+    @NotBlank(message = "搜索关键字不能为空")
+    private String search;
 }

@@ -1,7 +1,6 @@
 package com.chiiiplow.clouddrive.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chiiiplow.clouddrive.component.CustomMinioAsyncClient;
@@ -14,31 +13,20 @@ import com.chiiiplow.clouddrive.mapper.FileMapper;
 import com.chiiiplow.clouddrive.service.IFileService;
 import com.chiiiplow.clouddrive.util.BeanCopyUtils;
 import com.chiiiplow.clouddrive.util.R;
-import com.chiiiplow.clouddrive.vo.BreadcrumbVO;
 import com.chiiiplow.clouddrive.vo.FileVO;
 import com.chiiiplow.clouddrive.vo.FolderVO;
 import io.minio.MinioClient;
 import io.minio.StatObjectArgs;
-import io.minio.errors.*;
 import lombok.extern.slf4j.Slf4j;
-import lombok.var;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * 文件业务实现
@@ -59,8 +47,6 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
 
     @Resource
     private MinioClient minioClient;
-
-
 
 
 //    @Override
@@ -96,7 +82,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R addFolder(FolderVO folderVO, String userId) {
-        String parentId = folderVO.getParentId() != null ? folderVO.getParentId() : "0";
+        String parentId = !StringUtils.isBlank(folderVO.getParentId()) ? folderVO.getParentId() : "0";
         String folderName = folderVO.getFolderName();
         if (fileMapper.exists(new LambdaQueryWrapper<File>()
                 .eq(File::getParentId, parentId)
@@ -108,12 +94,12 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         }
         File file = new File().setFileName(folderName).setParentId(parentId).setUserId(userId).setIsFolder(1);
         try {
-            fileMapper.insert(file);
+            this.saveOrUpdate(file);
         } catch (Exception e) {
             log.info("添加文件夹错误:{}", e.getMessage());
             throw new CustomException("添加文件夹错误");
         }
-        return R.ok(null,"新增文件夹成功!");
+        return R.ok(null, "新增文件夹成功!");
     }
 
     @Override
@@ -124,7 +110,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         String parentId = fileVO.getParentId() != null ? fileVO.getParentId() : "0";
         String fileTypeName = fileVO.getFileTypeName();
         FileCategoryEnum fileCategoryEnum = FileCategoryEnum.fromCategory(fileTypeName);
-
+//        if (!StringUtils.isBlank(fileVO.getSearch())) {
+//            fileLambdaQueryWrapper.like(File::getFileName, fileVO.getSearch());
+//        }
         if (!ObjectUtils.isEmpty(fileCategoryEnum)) {
             fileLambdaQueryWrapper.eq(File::getFileType, fileCategoryEnum.getFileType());
         }
@@ -133,7 +121,6 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         PageDTO<FileDTO> pageDTO = PageDTO.of(filePage, FileDTO.class);
         return R.ok(pageDTO, null);
     }
-
 
 
     @Override
@@ -150,15 +137,23 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
         return R.ok(breadcrumb, null);
     }
 
+    @Override
+    public R<List<FileDTO>> search(FileVO fileVO, String currentUserId) {
+        LambdaQueryWrapper<File> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(File::getUserId, currentUserId).like(File::getFileName, fileVO.getSearch());
+        List<File> files = fileMapper.selectList(queryWrapper);
+        List<FileDTO> fileDTOS = BeanCopyUtils.copyBeanList(files, FileDTO.class);
+        return R.ok(fileDTOS, null);
+    }
+
     private void treeBreadcrumb(List<FileDTO> files, List<FileDTO> breadcrumb, String currentId) {
         if (breadcrumb.size() == 4 || StringUtils.equals(currentId, "0")) {
             return;
         }
-        FileDTO currentFile = files.stream().filter(file -> StringUtils.equals(file.getId(), currentId)).findFirst().orElseThrow(()->new CustomException("找不到文件"));
+        FileDTO currentFile = files.stream().filter(file -> StringUtils.equals(file.getId(), currentId)).findFirst().orElseThrow(() -> new CustomException("找不到文件"));
         breadcrumb.add(currentFile);
         treeBreadcrumb(files, breadcrumb, currentFile.getParentId());
     }
-
 
 
 }

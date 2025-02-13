@@ -22,32 +22,39 @@ import java.util.List;
  * @date 2024/12/09
  */
 @RestController
+@RequestMapping("file")
 public class FileController extends BaseController {
 
     @Resource
     private IFileService fileService;
 
 
-    @PostMapping("file/pages")
+    @PostMapping("pages")
     public R<PageDTO<FileDTO>> pages(@RequestBody FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
         String currentUserId = getCurrentUserId(request, response);
         return fileService.pagesByPageQuery(fileVO, currentUserId);
     }
 
-    @PostMapping("file/breadcrumb")
+    @PostMapping("search")
+    public R<List<FileDTO>> search(@RequestBody @Validated FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
+        String currentUserId = getCurrentUserId(request, response);
+        return fileService.search(fileVO, currentUserId);
+    }
+
+    @PostMapping("breadcrumb")
     public R<List<FileDTO>> breadcrumb(@RequestBody FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
         String currentUserId = getCurrentUserId(request, response);
         return fileService.breadcrumb(fileVO, currentUserId);
     }
 
 
-    @PostMapping("file/initUpload")
+    @PostMapping("initUpload")
     public R initUpload(HttpServletRequest request, HttpServletResponse response) {
         String currentUserId = getCurrentUserId(request, response);
         return null;
     }
 
-    @PostMapping("file/addFolder")
+    @PostMapping("addFolder")
     public R addFolder(@RequestBody @Validated FolderVO folderVO, HttpServletRequest request, HttpServletResponse response) {
         String currentUserId = getCurrentUserId(request, response);
         return fileService.addFolder(folderVO, currentUserId);
