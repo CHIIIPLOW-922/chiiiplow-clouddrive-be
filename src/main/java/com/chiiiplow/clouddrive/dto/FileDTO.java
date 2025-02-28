@@ -23,6 +23,8 @@ public class FileDTO {
 
     private String parentId;
 
+    private String userId;
+
     private Integer isFolder;
 
     private String fileName;

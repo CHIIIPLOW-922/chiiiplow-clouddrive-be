@@ -1,4 +1,4 @@
-package query;
+package com.chiiiplow.clouddrive.query;
 
 import lombok.Data;
 

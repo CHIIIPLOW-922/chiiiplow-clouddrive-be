@@ -72,4 +72,26 @@ public interface IFileService extends IService<File> {
      * @return {@link R}<{@link PageDTO}<{@link FileDTO}>>
      */
     R<List<FileDTO>> search(FileVO fileVO, String currentUserId);
+
+    /**
+     * 回收
+     *
+     * @param fileVO        文件 vo
+     * @param currentUserId 当前用户 ID
+     * @return {@link R}
+     */
+    R recycle(FileVO fileVO, String currentUserId);
+
+
+    /**
+     * 删除
+     *
+     * @param fileVO        文件 vo
+     * @param currentUserId 当前用户 ID
+     * @return {@link R}
+     */
+    R delete(FileVO fileVO, String currentUserId);
+
+
+
 }

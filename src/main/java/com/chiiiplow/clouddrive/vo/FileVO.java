@@ -1,14 +1,10 @@
 package com.chiiiplow.clouddrive.vo;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.chiiiplow.clouddrive.entity.File;
+import com.chiiiplow.clouddrive.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import query.PageQuery;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * 文件 vo
@@ -21,11 +17,15 @@ import javax.validation.constraints.NotNull;
 public class FileVO extends PageQuery {
 
 
-//    private String mimeTypeName;
+    private String id;
 
     private String fileTypeName;
 
+    private String userId;
+
     private String parentId;
+
+    private Integer isFolder;
 
     @NotBlank(message = "搜索关键字不能为空")
     private String search;

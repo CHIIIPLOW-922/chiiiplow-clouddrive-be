@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class FolderVO {
 
+    private String id;
+
     private String parentId;
 
     @NotBlank(message = "文件夹命名不允许为空！")

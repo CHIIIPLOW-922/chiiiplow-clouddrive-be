@@ -10,18 +10,22 @@ package com.chiiiplow.clouddrive.enums;
 public enum FileTypeEnum {
 
     // Document types
-    PDF(1, "PDF File", "application/pdf", "Document"),
-    DOC(1, "Word File", "application/msword", "Document"),
-    DOCX(1, "Word Document", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Document"),
-    XLS(1, "Excel File", "application/vnd.ms-excel", "Document"),
-    XLSX(1, "Excel Document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Document"),
-    PPT(1, "PowerPoint File", "application/vnd.ms-powerpoint", "Document"),
-    PPTX(1, "PowerPoint Document", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "Document"),
-    TXT(1, "Text File", "text/plain", "Document"),
-    HTML(1, "HTML File", "text/html", "Document"),
-    XML(1, "XML File", "application/xml", "Document"),
-    JSON(1, "JSON File", "application/json", "Document"),
-    CSV(1, "CSV File", "text/csv", "Document"),
+    PDF(3, "PDF File", "application/pdf", "Document"),
+    DOC(3, "Word File", "application/msword", "Document"),
+    DOCX(3, "Word Document", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Document"),
+    XLS(3, "Excel File", "application/vnd.ms-excel", "Document"),
+    XLSX(3, "Excel Document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Document"),
+    PPT(3, "PowerPoint File", "application/vnd.ms-powerpoint", "Document"),
+    PPTX(3, "PowerPoint Document", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "Document"),
+    TXT(3, "Text File", "text/plain", "Document"),
+    HTML(3, "HTML File", "text/html", "Document"),
+    XML(3, "XML File", "application/xml", "Document"),
+    JSON(3, "JSON File", "application/json", "Document"),
+    CSV(3, "CSV File", "text/csv", "Document"),
+    // Archive types
+    ZIP(3, "ZIP Archive", "application/zip", "Archive"),
+    RAR(3, "RAR Archive", "application/vnd.rar", "Archive"),
+    SEVEN_ZIP(3, "7-Zip Archive", "application/x-7z-compressed", "Archive"),
 
     // Image types
     GIF(2, "GIF Image", "image/gif", "Image"),
@@ -30,19 +34,15 @@ public enum FileTypeEnum {
     BMP(2, "BMP Image", "image/bmp", "Image"),
     TIFF(2, "TIFF Image", "image/tiff", "Image"),
 
-    // Audio types
-    MP3(3, "MP3 Audio", "audio/mpeg", "Audio"),
-    WAV(3, "WAV Audio", "audio/wav", "Audio"),
 
     // Video types
     MP4(4, "MP4 Video", "video/mp4", "Video"),
     AVI(4, "AVI Video", "video/x-msvideo", "Video"),
     MOV(4, "MOV Video", "video/quicktime", "Video"),
 
-    // Archive types
-    ZIP(5, "ZIP Archive", "application/zip", "Archive"),
-    RAR(5, "RAR Archive", "application/vnd.rar", "Archive"),
-    SEVEN_ZIP(5, "7-Zip Archive", "application/x-7z-compressed", "Archive"),
+    // Audio types
+    MP3(5, "MP3 Audio", "audio/mpeg", "Audio"),
+    WAV(5, "WAV Audio", "audio/wav", "Audio"),
 
     // Other types
     OCTET_STREAM(6, "Binary File", "application/octet-stream", "Other");

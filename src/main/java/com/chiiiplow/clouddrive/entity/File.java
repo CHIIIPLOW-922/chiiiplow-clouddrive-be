@@ -37,7 +37,7 @@ public class File {
 
     private Long fileSize;
 
-    private Integer fileType;
+    private String fileType;
 
     private String filePath;
 

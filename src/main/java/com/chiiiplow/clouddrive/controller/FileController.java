@@ -47,6 +47,12 @@ public class FileController extends BaseController {
         return fileService.breadcrumb(fileVO, currentUserId);
     }
 
+    @PostMapping("recycle")
+    public R recycle(@RequestBody FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
+        String currentUserId = getCurrentUserId(request, response);
+        return fileService.recycle(fileVO, currentUserId);
+    }
+
 
     @PostMapping("initUpload")
     public R initUpload(HttpServletRequest request, HttpServletResponse response) {
@@ -58,6 +64,13 @@ public class FileController extends BaseController {
     public R addFolder(@RequestBody @Validated FolderVO folderVO, HttpServletRequest request, HttpServletResponse response) {
         String currentUserId = getCurrentUserId(request, response);
         return fileService.addFolder(folderVO, currentUserId);
+    }
+
+
+    @PostMapping("delete")
+    public R delete(@RequestBody FileVO fileVO, HttpServletRequest request, HttpServletResponse response) {
+        String currentUserId = getCurrentUserId(request, response);
+        return fileService.delete(fileVO, currentUserId);
     }
 
 

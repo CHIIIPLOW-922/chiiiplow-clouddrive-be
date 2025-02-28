@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chiiiplow.clouddrive.mapper.FileMapper">
 
-
-
+    <select id="queryFileIdWithTree" resultType="com.chiiiplow.clouddrive.entity.File">
+        WITH RECURSIVE subtree AS (
+            SELECT id, file_name, parent_id
+            FROM file
+            WHERE id = '1888783002415194114' AND delete_status = 0
+            UNION ALL
+            SELECT f.id, f.file_name, f.parent_id
+            FROM file f
+            INNER JOIN subtree s ON f.parent_id = s.id AND .delete_status = 0
+            )
+        SELECT * FROM subtree
+    </select>
 </mapper>

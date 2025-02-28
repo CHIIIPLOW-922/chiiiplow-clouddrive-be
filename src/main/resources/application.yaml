@@ -60,6 +60,8 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:/mappers/**/*.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 #Minio配置
 minio:
@@ -82,4 +84,13 @@ chiiiplow:
       refresh:
         secret: you'll_still_never_know
         expire: 10080
+
+siliconflow:
+  baseUrl: https://api.siliconflow.cn/v1
+#  token: sk-
+#logging:
+#  level:
+#    com.baomidou.mybatisplus.core.MybatisPlus: DEBUG
+#    org.mybatis.spring.SqlSessionTemplate: DEBUG
+#    org.mybatis.spring.mapper.MapperFactoryBean: DEBUG
 
