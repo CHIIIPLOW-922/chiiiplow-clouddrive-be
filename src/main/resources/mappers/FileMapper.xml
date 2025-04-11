@@ -6,7 +6,7 @@
         WITH RECURSIVE subtree AS (
             SELECT id, file_name, parent_id
             FROM file
-            WHERE id = '1888783002415194114' AND delete_status = 0
+            WHERE id = #{parentId} AND delete_status = 0
             UNION ALL
             SELECT f.id, f.file_name, f.parent_id
             FROM file f
