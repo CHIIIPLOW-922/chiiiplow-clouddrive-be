@@ -17,13 +17,16 @@ spring:
     active: dev
   datasource:
     username: root
+#    username: jojireal
     #    username: oper_dc
     password: 123456
     #    password: mpH56E5bfOXB5XW*
     #    url: jdbc:mysql://192.168.194.103:3306/clouddisk-springboot
-    url: jdbc:mysql://localhost:3306/clouddrive
+    url: jdbc:mysql://192.168.194.35:3306/clouddrive
     #    url: jdbc:mysql://172.28.32.47:3306/ligao_common_db
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:postgresql://localhost:5432/clouddrive
+#    driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: HikariCPDatasource
       minimum-idle: 5
@@ -47,8 +50,8 @@ spring:
         debug: false
   redis:
     database: 0
-    #    host: 192.168.194.103
-    host: localhost
+    host: 192.168.194.35
+#    host: localhost
     port: 6379
     jedis:
       pool:
@@ -65,8 +68,8 @@ mybatis-plus:
 
 #Minio配置
 minio:
-  #  host: http://192.168.194.103:9000
-  host: http://localhost:9000
+  host: http://192.168.194.35:9000
+#  host: http://:9000
   url: ${minio.host}/${minio.bucketName}
   #  accessKey: chiiiplow
   #  secretKey: chiiiplow
