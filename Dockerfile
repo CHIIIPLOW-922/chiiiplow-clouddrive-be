@@ -11,6 +11,8 @@ FROM openjdk:8-jdk-alpine
 # 作者信息（可选）
 LABEL maintainer="chiiiplow q641484973@gmail.com"
 
+ADD https://arthas.aliyun.com/arthas-boot.jar /app/arthas-boot.jar
+
 # 把 jar 包复制进容器
 COPY --from=builder /app/target/*.jar app.jar
 
