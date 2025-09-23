@@ -1,5 +1,7 @@
 FROM maven:3.8.1-openjdk-8 AS builder
 
+COPY settings.xml /usr/share/maven/conf/settings.xml
+
 WORKDIR /app
 
 COPY pom.xml .

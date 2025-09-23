@@ -1,0 +1,18 @@
+<settings>
+    <mirrors>
+        <!-- 阿里云公共仓库 -->
+        <mirror>
+            <id>aliyunmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>阿里云公共仓库</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </mirror>
+        <!-- 中科大公共仓库 -->
+        <mirror>
+            <id>ustcmaven</id>
+            <mirrorOf>*</mirrorOf>
+            <name>中科大公共仓库</name>
+            <url>https://mirrors.ustc.edu.cn/maven/</url>
+        </mirror>
+    </mirrors>
+</settings>
