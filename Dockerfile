@@ -1,23 +1,24 @@
 FROM maven:3.6.3-jdk-8 AS builder
 
 WORKDIR /app
-
 COPY . .
-
 RUN mvn clean package -DskipTests
+
 
 FROM openjdk:8-jdk
 
-# 作者信息（可选）
 LABEL maintainer="chiiiplow q641484973@gmail.com"
 
+# 设置 JAVA_HOME 指向 JDK，而不是 jre
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# 下载 arthas
 ADD https://arthas.aliyun.com/arthas-boot.jar /app/arthas-boot.jar
 
-# 把 jar 包复制进容器
+# 拷贝应用
 COPY --from=builder /app/target/*.jar app.jar
 
-# 暴露端口（比如 Spring Boot 默认 8080）
 EXPOSE 8080
 
-# 启动 Spring Boot 应用
 ENTRYPOINT ["java", "-jar", "app.jar"]
