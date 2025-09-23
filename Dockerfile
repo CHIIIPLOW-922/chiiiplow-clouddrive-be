@@ -6,7 +6,7 @@ COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jdk
 
 # 作者信息（可选）
 LABEL maintainer="chiiiplow q641484973@gmail.com"
