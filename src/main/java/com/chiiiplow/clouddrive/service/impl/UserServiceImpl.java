@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -51,9 +52,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private JwtUtils jwtUtils;
 
+    @Resource
+    private TransactionTemplate transactionTemplate;
+
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public R register(RegisterVO registerVO) {
         String redisEmailCode = (String) redisUtils.get(RedisConstants.EMAIL_KEY + registerVO.getEmail());
         if (!StringUtils.equals(redisEmailCode, registerVO.getEmailValidCode())) {
@@ -74,13 +77,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .setNickname(registerUser.getUsername())
                 //注册账号，初始给10GB空间
                 .setTotalSpace(CommonConstant.ONE_GB * 10);
-        try {
-            userMapper.insert(registerUser);
-        } catch (DuplicateKeyException dke) {
-            throw new CustomException("账号或邮箱已存在");
-        } catch (Exception e) {
-            throw new CustomException("注册用户失败,请重试!");
-        }
+        transactionTemplate.executeWithoutResult(status -> {
+            try {
+                userMapper.insert(registerUser);
+            } catch (DuplicateKeyException dke) {
+                status.setRollbackOnly();
+                throw new CustomException("账号或邮箱已存在");
+            } catch (Exception e) {
+                status.setRollbackOnly();
+                throw new CustomException("注册用户失败,请重试!");
+            }
+        });
         return R.ok(null, "注册成功！");
     }
 

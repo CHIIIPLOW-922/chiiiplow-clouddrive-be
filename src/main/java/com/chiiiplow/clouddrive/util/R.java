@@ -2,6 +2,7 @@ package com.chiiiplow.clouddrive.util;
 
 import com.chiiiplow.clouddrive.enums.HttpCode;
 import lombok.Data;
+import org.jboss.logging.MDC;
 
 import java.io.Serializable;
 
@@ -19,6 +20,8 @@ public class R<T> implements Serializable {
     private String msg;
 
     private T data;
+
+    private String traceId;
 
     public static final int SUCCESS = 200;
     public static final String SUCCESS_MSG = "请求成功！";
@@ -76,6 +79,7 @@ public class R<T> implements Serializable {
         r.setCode(code);
         r.setData(data);
         r.setMsg(msg);
+        r.setTraceId(MDC.get("traceId").toString());
         return r;
     }
 

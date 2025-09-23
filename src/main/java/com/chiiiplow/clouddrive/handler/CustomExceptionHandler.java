@@ -4,6 +4,7 @@ import com.chiiiplow.clouddrive.exception.CustomException;
 import com.chiiiplow.clouddrive.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.ObjectUtils;
@@ -55,6 +56,10 @@ public class CustomExceptionHandler {
         int errorCode = ObjectUtils.isEmpty(code) ? HttpServletResponse.SC_INTERNAL_SERVER_ERROR : code;
         r.setCode(errorCode);
         r.setMsg(error);
+        String traceId = r.getTraceId();
+        if (StringUtils.isBlank(traceId)) {
+            r.setTraceId(MDC.get("traceId"));
+        }
         return r;
 
     }
@@ -89,6 +94,9 @@ public class CustomExceptionHandler {
 
         }
         r.setMsg(message);
+        if (StringUtils.isBlank(r.getTraceId())) {
+            r.setTraceId(MDC.get("traceId"));
+        }
         return r;
     }
 }

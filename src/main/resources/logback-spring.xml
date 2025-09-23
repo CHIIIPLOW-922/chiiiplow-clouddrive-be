@@ -30,6 +30,7 @@
         <prudent>false</prudent>
     </appender>
     <logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener" level="OFF"/>
+    <logger name="com.zaxxer.hikari.pool.HikariPool" level="OFF"/>
 
     <root level="${log.root.level}">
         <appender-ref ref="stdot"/>

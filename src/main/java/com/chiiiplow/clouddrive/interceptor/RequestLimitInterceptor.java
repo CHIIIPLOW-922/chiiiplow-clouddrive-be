@@ -35,7 +35,6 @@ public class RequestLimitInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String ipAddress = CommonUtils.getIpAddress(request);
-//        log.info(ipAddress);
         if (!redisUtils.allowRequestWithLua(RedisConstants.IP_KEY + ipAddress, LIMIT_COUNT, TIME_WINDOW)) {
             response.setContentType("application/json;charset=UTF-8");
             ObjectMapper objectMapper = new ObjectMapper();

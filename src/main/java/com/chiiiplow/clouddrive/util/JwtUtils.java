@@ -95,6 +95,7 @@ public class JwtUtils {
      */
     public Claims validatedAccessToken(String token) {
         try {
+            if (token == null) return null;
             return Jwts.parser().setSigningKey(ACCESS_SECRET).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             return null;
@@ -118,6 +119,7 @@ public class JwtUtils {
      */
     public Claims validateRefreshToken(String token) {
         try {
+            if (token == null) return null;
             return Jwts.parser().setSigningKey(REFRESH_SECRET).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             return null;
