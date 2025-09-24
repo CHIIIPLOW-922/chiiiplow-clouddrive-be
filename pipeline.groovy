@@ -34,13 +34,15 @@ pipeline {
 
         stage('Docker Build & Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+//                withCredentials([usernamePassword(credentialsId: 'docker-account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker build -t chiiiplow/demo-app:latest .
-                    docker push chiiiplow/demo-app:latest
+//                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker build -t demo-app:latest .
+                    docker save demo-app:latest -o demo-app.tar
+                    ctr -n k8s.io images import demo-app.tar
+
                     '''
-                }
+//                }
             }
         }
 
