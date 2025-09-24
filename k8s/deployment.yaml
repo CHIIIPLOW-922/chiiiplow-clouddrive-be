@@ -15,6 +15,7 @@ spec:
       containers:
         - name: demo-app
           image: chiiiplow/demo-app:latest
+          imagePullPolicy: IfNotPresent
           env:
             - name: JAVA_TOOL_OPTIONS
               value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005"
