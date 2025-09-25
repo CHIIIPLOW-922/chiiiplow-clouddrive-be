@@ -73,7 +73,7 @@ minio:
   url: ${minio.host}/${minio.bucketName}
   #  accessKey: chiiiplow
   #  secretKey: chiiiplow
-  accessKey: admin
+  accessKey: minioadmin
   secretKey: minioadmin
   #  secretKey: chiiiplow
   bucketName: clouddrive
