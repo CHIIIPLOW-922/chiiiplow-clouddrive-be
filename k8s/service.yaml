@@ -10,10 +10,10 @@ spec:
       name: http
       port: 8080       # Service 内部端口
       targetPort: 8080 # Pod 内部应用端口
-      nodePort: 8080  # 外部访问端口（浏览器访问 http://nodeIP:30080）
+      nodePort: 30080  # 外部访问端口（浏览器访问 http://nodeIP:30080）
     - protocol: TCP
       name: debug
       port: 5005       # Service 内部端口
       targetPort: 5005 # Pod 内部 JVM 调试端口
-      nodePort: 8081  # 外部调试用端口（IDEA 连 nodeIP:30055）
+      nodePort: 30081  # 外部调试用端口（IDEA 连 nodeIP:30055）
   type: NodePort
