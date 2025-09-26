@@ -18,7 +18,7 @@ FROM openjdk:8-jdk
 LABEL maintainer="chiiiplow q641484973@gmail.com"
 
 # 设置 JAVA_HOME 指向 JDK，而不是 jre
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+ENV JAVA_HOME=/usr/local/openjdk-8
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # 下载 arthas
