@@ -18,7 +18,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: JAVA_TOOL_OPTIONS
-              value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005"
+              value: "-XX:+PrintGCDetails"
           ports:
             - containerPort: 8080
             - containerPort: 5005
