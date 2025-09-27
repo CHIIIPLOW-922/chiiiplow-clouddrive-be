@@ -18,7 +18,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: JAVA_TOOL_OPTIONS
-              value: "-XX:+PrintGCDetails"
+              value: "-XX:+PrintGCDetails -XX:UseG1GC"
           ports:
             - containerPort: 8080
             - containerPort: 5005
